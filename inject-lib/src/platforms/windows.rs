@@ -26,7 +26,7 @@ use winapi::um::winnt::{
 mod mem;
 #[cfg(feature = "ntdll")]
 mod ntdll;
-pub(super) mod process;
+pub(crate) mod process;
 mod thread;
 
 const KERNEL32: &'static str = "KERNEL32.DLL";

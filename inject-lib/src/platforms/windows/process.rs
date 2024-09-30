@@ -6,8 +6,9 @@ use winapi::shared::minwindef::{DWORD, FALSE};
 use winapi::um::handleapi::CloseHandle;
 use winapi::um::processthreadsapi::{GetCurrentProcess, GetCurrentProcessId, OpenProcess};
 use winapi::um::winnt::{
-    HANDLE, IMAGE_FILE_MACHINE_UNKNOWN, PROCESS_ALL_ACCESS, PROCESS_QUERY_INFORMATION,
-    PROCESS_QUERY_LIMITED_INFORMATION,
+    HANDLE, IMAGE_FILE_MACHINE_UNKNOWN, PROCESS_ALL_ACCESS, PROCESS_CREATE_THREAD,
+    PROCESS_QUERY_INFORMATION, PROCESS_QUERY_LIMITED_INFORMATION, PROCESS_VM_OPERATION,
+    PROCESS_VM_READ, PROCESS_VM_WRITE,
 };
 use winapi::um::wow64apiset::IsWow64Process2;
 
@@ -22,6 +23,17 @@ pub struct Process {
     wow: OnceBool,
 }
 impl Process {
+    pub fn new_injector(pid: u32) -> Result<Self> {
+        Self::new(
+            pid,
+            PROCESS_CREATE_THREAD
+                | PROCESS_VM_WRITE
+                | PROCESS_VM_READ
+                | PROCESS_VM_OPERATION
+                | PROCESS_QUERY_INFORMATION,
+        )
+    }
+
     pub fn new(pid: u32, perms: DWORD) -> Result<Self> {
         let proc = check_ptr!(OpenProcess(perms, FALSE, pid)) as usize;
         Ok(Self {

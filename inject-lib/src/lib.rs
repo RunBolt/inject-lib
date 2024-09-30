@@ -51,6 +51,7 @@ pub(crate) use log::{debug, error, info, trace, warn};
 ///Holds all error types
 pub mod error;
 mod platforms;
+pub mod process;
 ///This represents the actions, that are supported with a dll.
 pub trait Inject {
     ///Injects a dll
